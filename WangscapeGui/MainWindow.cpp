@@ -102,14 +102,16 @@ void MainWindow::saveOutput()
     boost::filesystem::path p(image_dir);
     for (const auto& preview_image : mPreviewImages)
     {
-        p.append(preview_image.first);
+        const auto& filepath = preview_image.second.first;
+        const auto& filename = preview_image.first;
+        p.append(filepath + filename);
         if (!preview_image.second.second.save(QString(p.string().c_str())))
         {
             QMessageBox critical_error_message;
             critical_error_message.critical(this, "Error during saving tilesets", QString("Couldn't save tileset image"));
             return;
         }
-        p.remove_filename();
+        p.remove_filename();//ARGH
     }
 
     mTilesetGenerator->metaOutput.writeAll(*mOptions);
